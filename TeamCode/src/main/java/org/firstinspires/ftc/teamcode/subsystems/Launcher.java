@@ -65,7 +65,7 @@ public class Launcher {
 
     public Launcher(HardwareMap hardwareMap) {
         hammer     = hardwareMap.get(Servo.class, "hammer");
-        feedsweep  = hardwareMap.get(Servo.class, "feedsweep");
+        feedsweep  = hardwareMap.get(Servo.class, "feedSweep");
         wheel      = hardwareMap.get(CRServo.class, "wheel");
         flywheelLeft  = hardwareMap.get(DcMotorEx.class, "leftFly");
         flywheelRight = hardwareMap.get(DcMotorEx.class, "rightFly");
