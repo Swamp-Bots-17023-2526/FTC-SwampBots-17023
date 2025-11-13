@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Lift;
-import org.firstinspires.ftc.teamcode.Subsystems.Loader;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
@@ -227,6 +226,9 @@ public class RedBottomAuto extends OpMode {
         buildPaths();
         follower.setStartingPose(startRedFar);
 
+        opmodeTimer.resetTimer();
+        setPathState(0);
+
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
@@ -242,8 +244,7 @@ public class RedBottomAuto extends OpMode {
      **/
     @Override
     public void init_loop() {
-        opmodeTimer.resetTimer();
-        setPathState(0);
+
     }
 
     /**
