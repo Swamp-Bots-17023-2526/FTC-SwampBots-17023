@@ -25,7 +25,7 @@ public class TeleopRed extends OpMode {
     private boolean prevRightStickButton = false;
 
     // Example auto-aim target (change to your real target coordinates)
-    private static final double FACE_X = 67;   // field X of shooting target
+    private static final double FACE_X = 60;   // field X of shooting target
     private static final double FACE_Y = 67;   // field Y of shooting target
 
     // Pose reset location (change to something meaningful for you)
@@ -35,15 +35,15 @@ public class TeleopRed extends OpMode {
 
     // Launcher shot velocities (tune these)
     private static final double LOW_VELOCITY  = 1800;
-    private static final double HIGH_VELOCITY = 2200;
+    private static final double HIGH_VELOCITY = 2000;
 
     @Override
     public void init() {
         drive    = new PedroDrive(hardwareMap);
-        drive.setParkingPose(0,0,0);
         launcher = new Launcher(hardwareMap);
         intake   = new Intake(hardwareMap);
         lift     = new Lift(hardwareMap);
+        drive.setStartingPose(-10,-62,0);
 
         telemetry.addLine("MainTeleOpWithPedro initialized");
     }
