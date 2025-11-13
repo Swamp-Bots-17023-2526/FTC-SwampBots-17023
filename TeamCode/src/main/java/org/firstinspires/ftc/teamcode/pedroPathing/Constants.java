@@ -30,14 +30,14 @@ public class Constants {
 
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .leftFrontMotorName("leftFront")
-            .leftRearMotorName("leftRear")
-            .rightFrontMotorName("rightFront")
-            .rightRearMotorName("rightRear")
+            .leftFrontMotorName("leftRear")
+            .leftRearMotorName("leftFront")
+            .rightFrontMotorName("rightRear")
+            .rightRearMotorName("rightFront")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .xVelocity(52.41567608362866)
             .yVelocity(30.88);
 
@@ -45,15 +45,15 @@ public class Constants {
             .forwardTicksToInches(0.002980426565529629)
             .strafeTicksToInches(0.002980426565529629)
             .turnTicksToInches(0.00208970)
-            .leftPodY(7)
-            .rightPodY(-7)
-            .strafePodX(-6.5)
+            .leftPodY(-7.5)
+            .rightPodY(7.5)
+            .strafePodX(6)
             .leftEncoder_HardwareMapName("leftFront")
             .rightEncoder_HardwareMapName("rightFront")
             .strafeEncoder_HardwareMapName("rightRear")
             .leftEncoderDirection(Encoder.REVERSE)
             .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.REVERSE)
+            .strafeEncoderDirection(Encoder.FORWARD)
             .IMU_HardwareMapName("imu")
             //the intake is back
             .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,

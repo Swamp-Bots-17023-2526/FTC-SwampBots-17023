@@ -8,8 +8,8 @@ public class Intake {
     private final DcMotor intakeMotor;
 
     // Power constants – tweak to suit your mechanism
-    private static final double INTAKE_IN_POWER  = 1.0;
-    private static final double INTAKE_OUT_POWER = -1.0;
+    private static final double INTAKE_IN_POWER  = -1.0;
+    private static final double INTAKE_OUT_POWER = 1.0;
     private static final double STOP_POWER       = 0.0;
 
     public enum State {

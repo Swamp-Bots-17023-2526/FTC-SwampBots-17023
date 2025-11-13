@@ -19,7 +19,7 @@ public class Launcher {
     private static final double HAMMER_PRIMED = 0.7;
     private static final double HAMMER_FIRE   = 0.6;
 
-    // Feedsweep positions – guessed; tune on robot
+    // Feedsweep positions – tune on robot
     private static final double FEEDSWEEP_RETRACTED = 0.0;
     private static final double FEEDSWEEP_FEED      = 0.3;
 
@@ -34,11 +34,11 @@ public class Launcher {
 
     // Velocity & tolerance
     private double targetVelocity = 0;
-    private static final double VELOCITY_TOLERANCE = 25; // widen if too picky
+    private static final double VELOCITY_TOLERANCE = 25; // widen if needed
 
     // Timing (ms) – tune by feel
-    private static final long FIRE_TIME_MS = 200; // how long hammer/wheel act for a shot
-    private static final long FEED_TIME_MS = 250; // how long to advance second artifact
+    private static final long FIRE_TIME_MS = 200; // hammer/wheel act time
+    private static final long FEED_TIME_MS = 250; // advance second artifact
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -48,16 +48,16 @@ public class Launcher {
         IDLE,
         SPINNING_UP,
         FIRING_SINGLE,      // one artifact: hammer + wheel
-        FIRING_TWO_FRONT,   // two artifacts: wheel only, front artifact fired
+        FIRING_TWO_FRONT,   // two artifacts: wheel only
         ADVANCING_SECOND    // move second artifact into launching position
     }
 
     private State state = State.IDLE;
 
-    // Whether the current shot was requested as "two artifacts"
+    // Whether current shot was requested with two artifacts
     private boolean currentTwoArtifacts = false;
 
-    // Whether we’ve actually been asked to fire (vs just pre-spin)
+    // Whether a launch has been requested (vs just pre-spin)
     private boolean launchRequested = false;
 
 
@@ -107,12 +107,27 @@ public class Launcher {
         flywheelRight.setVelocity(targetVelocity);
 
         // Prepare hammer so that launch can fire quickly
-        hammer.setPosition(HAMMER_PRIMED);
+        hammer.setPosition(HAMMER_OPEN);
 
         // We are spinning, but no shot is yet requested
         launchRequested = false;
         state = State.SPINNING_UP;
     }
+
+    public void manualWheelOn() {
+        // Only allow manual rotation when IDLE so it doesn't clash with auto firing
+        if (state == State.IDLE) {
+            wheel.setPower(WHEEL_FEED_POWER);
+        }
+    }
+
+    public void manualWheelOff() {
+        // Only stop it if not in middle of a firing/feeding action
+        if (state == State.IDLE) {
+            wheel.setPower(0);
+        }
+    }
+
 
     /**
      * Request a launch.
@@ -122,18 +137,18 @@ public class Launcher {
      *                     false -> single artifact: hammer + wheel fire together
      */
     public void launch(double velocity, boolean twoArtifacts) {
-        // If we're in the middle of feeding or firing, ignore
+        // Only act if we're idle or spinning up
         if (state != State.IDLE && state != State.SPINNING_UP) return;
 
         currentTwoArtifacts = twoArtifacts;
         launchRequested = true;
 
         if (state == State.IDLE) {
-            // Start from rest
+            // Start spin from rest
             targetVelocity = velocity;
             flywheelLeft.setVelocity(targetVelocity);
             flywheelRight.setVelocity(targetVelocity);
-            hammer.setPosition(HAMMER_PRIMED);
+            hammer.setPosition(HAMMER_OPEN);
             state = State.SPINNING_UP;
         } else if (state == State.SPINNING_UP) {
             // Already spinning: just adjust target if needed
@@ -150,13 +165,12 @@ public class Launcher {
 
         hammer.setPosition(HAMMER_OPEN);
         wheel.setPower(WHEEL_FEED_POWER);
-        feedsweep.setPosition(FEEDSWEEP_FEED);
 
         timer.reset();
         state = State.ADVANCING_SECOND;
     }
 
-    /** Option to stop everything quickly from TeleOp. */
+    /** Hard stop everything. Used for X button: stop launcher + intake. */
     public void stopAll() {
         flywheelLeft.setVelocity(0);
         flywheelRight.setVelocity(0);
@@ -187,7 +201,7 @@ public class Launcher {
                 if (leftAtSpeed && rightAtSpeed) {
                     // If we were only pre-spinning, just hold speed
                     if (!launchRequested) {
-                        // stay in SPINNING_UP, nothing else
+                        // stay in SPINNING_UP, keep flywheels running
                         break;
                     }
 
@@ -196,6 +210,7 @@ public class Launcher {
 
                     if (currentTwoArtifacts) {
                         // TWO artifacts: wheel only pushes the front artifact out
+                        hammer.setPosition(HAMMER_OPEN);
                         wheel.setPower(WHEEL_FEED_POWER);
                         state = State.FIRING_TWO_FRONT;
                     } else {
