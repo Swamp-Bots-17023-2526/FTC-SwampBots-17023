@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.Subsystems.FieldCentricDrive;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 
 public class TestOp extends OpMode {
 
@@ -34,6 +34,8 @@ public class TestOp extends OpMode {
     //for FC drive
     FieldCentricDrive DriveTrain;
     //variables for the forward strafe turn
+
+    Intake nom;
     double forward;
     double strafe;
     double turn;
@@ -70,6 +72,9 @@ public class TestOp extends OpMode {
 
         //for the field centric
         DriveTrain = new FieldCentricDrive(hardwareMap, imu);
+
+        //Intake
+        nom = new Intake(hardwareMap);
     }
 
     //After button
@@ -89,7 +94,9 @@ public class TestOp extends OpMode {
         }
         //Intake
         if(gamepad1.a){
-
+            nom.spin();
+        } else {
+            nom.stop();
         }
 
     }
