@@ -70,16 +70,17 @@ public class TestOp extends OpMode {
 
         //for the field centric
         DriveTrain = new FieldCentricDrive(hardwareMap, imu);
-        forward = -gamepad1.left_stick_y;
-        strafe = gamepad1.left_stick_x;
-        turn = gamepad1.right_stick_x;
-
     }
 
     //After button
 
     @Override
     public void loop(){
+
+        //upd every loop the gamepad inputs so that the drive func will work
+        forward = -gamepad1.left_stick_y;
+        strafe = gamepad1.left_stick_x;
+        turn = gamepad1.right_stick_x;
         DriveTrain.drive(forward, strafe, turn);
 
         //reset heading (x)
