@@ -45,7 +45,7 @@ public class TeleopRed extends OpMode {
         lift     = new Lift(hardwareMap);
         drive.setStartingPose(-10,-62,0);
 
-        telemetry.addLine("MainTeleOpWithPedro initialized");
+        telemetry.addLine("TeleopRed initialized");
     }
 
     @Override

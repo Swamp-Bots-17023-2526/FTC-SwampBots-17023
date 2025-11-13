@@ -37,8 +37,8 @@ public class Launcher {
     private static final double VELOCITY_TOLERANCE = 25; // widen if needed
 
     // Timing (ms) – tune by feel
-    private static final long FIRE_TIME_MS = 750; // hammer/wheel act time
-    private static final long FEED_TIME_MS = 250; // advance second artifact
+    private static final long FIRE_TIME_MS = 1000; // hammer/wheel act time
+    private static final long FEED_TIME_MS = 500; // advance second artifact
 
     private final ElapsedTime timer = new ElapsedTime();
 
