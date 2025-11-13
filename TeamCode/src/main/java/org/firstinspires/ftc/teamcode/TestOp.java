@@ -94,7 +94,7 @@ public class TestOp extends OpMode {
         }
         //Intake
         if(gamepad1.a){
-            nom.spin();
+            nom.intakeIn();
         } else {
             nom.stop();
         }

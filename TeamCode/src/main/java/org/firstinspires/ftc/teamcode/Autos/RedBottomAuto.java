@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedroPathing.Autos;
+package org.firstinspires.ftc.teamcode.Autos;
 
 
 import com.pedropathing.follower.Follower;
@@ -199,7 +199,7 @@ public class RedBottomAuto extends OpMode {
      * This is the main loop of the OpMode, it will run repeatedly after clicking "Play".
      **/
     @Override
-    public void onUpdate() {
+    public void loop() {
 
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
@@ -217,7 +217,7 @@ public class RedBottomAuto extends OpMode {
      * This method is called once at the init of the OpMode.
      **/
     @Override
-    public void onInit() {
+    public void init() {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
@@ -241,7 +241,7 @@ public class RedBottomAuto extends OpMode {
      * It runs all the setup actions, including building paths and starting the path system
      **/
     @Override
-    public void onStartButtonPressed() {
+    public void init_loop() {
         opmodeTimer.resetTimer();
         setPathState(0);
     }
@@ -250,7 +250,7 @@ public class RedBottomAuto extends OpMode {
      * We do not use this because everything should automatically disable
      **/
     @Override
-    public void onStop() {
+    public void stop() {
     }
 
 
