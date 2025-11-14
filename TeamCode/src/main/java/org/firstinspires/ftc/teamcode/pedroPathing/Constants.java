@@ -7,7 +7,6 @@ import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.Encoder;
-import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
 import com.pedropathing.ftc.localization.constants.ThreeWheelIMUConstants;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
