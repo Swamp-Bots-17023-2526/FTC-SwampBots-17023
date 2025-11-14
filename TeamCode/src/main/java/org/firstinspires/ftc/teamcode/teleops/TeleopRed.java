@@ -25,8 +25,8 @@ public class TeleopRed extends OpMode {
     private boolean prevRightStickButton = false;
 
     // Example auto-aim target (change to your real target coordinates)
-    private static final double FACE_X = 60;   // field X of shooting target
-    private static final double FACE_Y = 67;   // field Y of shooting target
+    private static final double FACE_X = 132;   // field X of shooting target
+    private static final double FACE_Y = 139;   // field Y of shooting target
 
     // Pose reset location (change to something meaningful for you)
     private static final double RESET_X = 9;
@@ -43,7 +43,7 @@ public class TeleopRed extends OpMode {
         launcher = new Launcher(hardwareMap);
         intake   = new Intake(hardwareMap);
         lift     = new Lift(hardwareMap);
-        drive.setStartingPose(-10,-62,0);
+        drive.setStartingPose(63,10,0);
 
         telemetry.addLine("TeleopRed initialized");
     }
@@ -70,6 +70,7 @@ public class TeleopRed extends OpMode {
             intake.intakeIn();
         } else if (gamepad1.b) {
             intake.intakeOut();
+            launcher.manualWheelBack();
         } else {
             intake.stop();
         }
@@ -96,7 +97,7 @@ public class TeleopRed extends OpMode {
 
         // Y button: manually hold wheel ON
         if (gamepad1.y) {
-            launcher.manualWheelOn();
+            launcher.manualWheelForward();
         } else {
             launcher.manualWheelOff();
         }

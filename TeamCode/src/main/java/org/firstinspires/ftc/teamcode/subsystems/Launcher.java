@@ -114,7 +114,14 @@ public class Launcher {
         state = State.SPINNING_UP;
     }
 
-    public void manualWheelOn() {
+    public void manualWheelForward() {
+        // Only allow manual rotation when IDLE so it doesn't clash with auto firing
+        if (state == State.IDLE) {
+            wheel.setPower(WHEEL_FEED_POWER);
+        }
+    }
+
+    public void manualWheelBack() {
         // Only allow manual rotation when IDLE so it doesn't clash with auto firing
         if (state == State.IDLE) {
             wheel.setPower(WHEEL_FEED_POWER);
