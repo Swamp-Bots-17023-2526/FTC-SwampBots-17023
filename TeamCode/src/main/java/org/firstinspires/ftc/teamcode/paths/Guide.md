@@ -7,6 +7,10 @@
 3) Write an explaination of the path generated
 
 
+## To retrieve
+1) go to github and download the path
+2) import to visualizer
+
 ## red1 
 
 ### Staring - Red Bot
