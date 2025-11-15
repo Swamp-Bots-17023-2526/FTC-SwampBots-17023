@@ -1,5 +1,7 @@
-package org.firstinspires.ftc.teamcode.Autos;
+package org.firstinspires.ftc.teamcode.autos;
 
+
+import static org.firstinspires.ftc.teamcode.autos.Poses.*;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -7,14 +9,12 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.subsystems.Launcher;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-import kotlinx.coroutines.Delay;
+
 
 
 /*
@@ -25,18 +25,20 @@ import kotlinx.coroutines.Delay;
  * FACING TOWARDS OPPOSITE WALL
  *
  * */
-@Autonomous(name = "TestAuto", group = "Examples")
+@Autonomous(name = "RedBottomAuto", group = "Examples")
 public class RedBottomAuto extends OpMode {
+
+    //public RedBottomAuto() {
+    //  addComponents(new SubsystemComponent(Intake.INSTANCE, Flywheel.INSTANCE, Loader.INSTANCE, Lift.INSTANCE), BulkReadComponent.INSTANCE, BindingsComponent.INSTANCE);
+    //}
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
-    private Intake nom;
-    private Launcher pew;
-    private Lift uppies;
+
     private int pathState;
 
     private final Pose startRedClose = new Pose(118, 118, Math.toRadians(225));//right up against goal, facing away
-    private final Pose startRedFar = new Pose(84, 12, Math.toRadians(90)); //on line, facing forward, middle of square
+    private final Pose startRedFar = new Pose(86, 9, Math.toRadians(90)); //on line, facing forward, middle of square
     private final Pose shootPoseFarRed = new Pose(84, 84, Math.toRadians(45)); //CHANGE ONCE VELOCITY DEFINED
     private final Pose shootPoseCloseRed = new Pose(84, 84, Math.toRadians(45)); //CHANGE ONCE VELOCITY DEFINED
 
@@ -107,97 +109,137 @@ public class RedBottomAuto extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                //pause
+                //flywheel shoot
+                //new Delay(1);
+
                 follower.followPath(moveToShoot, true);
+                //for shooting 2 balls
+//                new SequentialGroup(
+//                        //flywheel shoot,
+//                        Flywheel.INSTANCE.shoot_short,
+//                        //stop the flys
+//                        Flywheel.INSTANCE.stop,
+//                        //load next ball
+//                        Loader.INSTANCE.push,
+//                        //reset the loader
+//                        Loader.INSTANCE.reset,
+//                        //Shoot second preload
+//                        Flywheel.INSTANCE.shoot_short, Flywheel.INSTANCE.stop);
                 setPathState(1);
                 break;
             case 1:
                 if (!follower.isBusy()) {
-                    //score preload
-                    //have to make sure it scores both
-                    pew.launch(1000, true);
-
                     follower.followPath(moveToObjects1, true);
+                    //start intake
+                    //Intake.INSTANCE.spin();
                     setPathState(2);
                 }
                 break;
             case 2:
                 if (!follower.isBusy()) {
-                    //start intake
-                    nom.intakeIn();
                     follower.followPath(pickupObjects1, true);
+                    //stop intake
+                    //Intake.INSTANCE.stop();
                     setPathState(3);
-
                 }
-                break;
             case 3:
                 if (!follower.isBusy()) {
-                    //stop intake then move to next pos
-                    nom.stop();
                     follower.followPath(moveToShoot1, true);
+                    //pause
+//                    new Delay(3);
+//                    //flywheel shoot
+//                    new SequentialGroup(
+//                            //flywheel shoot,
+//                            Flywheel.INSTANCE.shoot_short,
+//                            //stop the flys
+//                            Flywheel.INSTANCE.stop,
+//                            //load next ball
+//                            Loader.INSTANCE.push,
+//                            //reset the loader
+//                            Loader.INSTANCE.reset,
+//                            //Shoot second preload
+//                            Flywheel.INSTANCE.shoot_short, Flywheel.INSTANCE.stop);
                     setPathState(4);
                 }
                 break;
             case 4:
                 if (!follower.isBusy()) {
-                    //shoot stuff
-                    pew.launch(1000, true);
-                    follower.followPath(moveToObjects2, true);
-                    setPathState(5);
 
+                    follower.followPath(moveToObjects2, true);
+                    //Intake.INSTANCE.spin();
+                    //start intake
+                    setPathState(5);
                 }
                 break;
             case 5:
                 if (!follower.isBusy()) {
-                    //start intake
-                    nom.intakeIn();
                     follower.followPath(pickupObjects2, true);
+                    //stop intake
                     setPathState(6);
+                    //Intake.INSTANCE.stop();
                 }
                 break;
             case 6:
                 if (!follower.isBusy()) {
-                    nom.stop();
+                    //pause
                     follower.followPath(moveToShoot2, true);
+//                    new Delay(.5);
+//                    //flywheel shoot
+//                    new SequentialGroup(
+//                            //flywheel shoot,
+//                            Flywheel.INSTANCE.shoot_short,
+//                            //stop the flys
+//                            Flywheel.INSTANCE.stop,
+//                            //load next ball
+//                            Loader.INSTANCE.push,
+//                            //reset the loader
+//                            Loader.INSTANCE.reset,
+//                            //Shoot second preload
+//                            Flywheel.INSTANCE.shoot_short,
+//                            Flywheel.INSTANCE.stop
+//                    );
                     setPathState(7);
                 }
                 break;
             case 7:
                 if (!follower.isBusy()) {
-                    //shoot stuff
-                    pew.launch(1000, true);
                     follower.followPath(moveToObjects3, true);
+                    //start intake
+                    //Intake.INSTANCE.spin();
                     setPathState(8);
                 }
                 break;
             case 8:
                 if (!follower.isBusy()) {
-                    //start intake
-                    nom.intakeIn();
                     follower.followPath(pickupObjects3, true);
+                    //stop intake
+                    //Intake.INSTANCE.stop();
                     setPathState(9);
                 }
                 break;
             case 9:
                 if (!follower.isBusy()) {
-                    nom.stop();
                     //pause
                     follower.followPath(moveToShoot3, true);
+//                    new Delay(.5);
+//                    //flywheel shoot
+//                    new SequentialGroup(
+//                            //flywheel shoot,
+//                            Flywheel.INSTANCE.shoot_short,
+//                            //stop the flys
+//                            Flywheel.INSTANCE.stop,
+//                            //load next ball
+//                            Loader.INSTANCE.push,
+//                            //reset the loader
+//                            Loader.INSTANCE.reset,
+//                            //Shoot second preload
+//                            Flywheel.INSTANCE.shoot_short,
+//                            Flywheel.INSTANCE.stop
+//                    );
                     setPathState(10);
                 }
                 break;
-            case 10:
-                if (!follower.isBusy()) {
-                    //shoot stuff
-                    pew.launch(1000, true);
-                    setPathState(-1);
-                }
-            case 11:
-                if (follower.isBusy()) {
-                    //get a pos for parking
-                    setPathState(-1);
-                }
-                break;
-
         }
     }
 
@@ -235,6 +277,8 @@ public class RedBottomAuto extends OpMode {
     /**
      * This method is called once at the init of the OpMode.
      **/
+
+
     @Override
     public void init() {
         pathTimer = new Timer();
@@ -246,10 +290,8 @@ public class RedBottomAuto extends OpMode {
         buildPaths();
         follower.setStartingPose(startRedFar);
 
-        opmodeTimer.resetTimer();
-        setPathState(0);
-
     }
+
 
     /** This method is called continuously after Init while waiting for "play". **/
   /*  @Override
@@ -262,17 +304,18 @@ public class RedBottomAuto extends OpMode {
      * This method is called once at the start of the OpMode.
      * It runs all the setup actions, including building paths and starting the path system
      **/
+
     @Override
-    public void init_loop() {
-
-    }
-
-    /**
-     * We do not use this because everything should automatically disable
-     **/
+    public void init_loop() {}
+    /** This method is called once at the start of the OpMode.
+     * It runs all the setup actions, including building paths and starting the path system **/
     @Override
-    public void stop() {
+    public void start() {
+        opmodeTimer.resetTimer();
+        setPathState(0);
     }
-
+    /** We do not use this because everything should automatically disable **/
+    @Override
+    public void stop() {}
 
 }
