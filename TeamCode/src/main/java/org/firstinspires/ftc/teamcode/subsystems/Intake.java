@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake {
-
+//
     private final DcMotor intakeMotor;
 
     // Power constants – tweak to suit your mechanism
