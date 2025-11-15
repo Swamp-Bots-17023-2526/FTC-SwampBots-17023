@@ -25,9 +25,9 @@ public class PedroDrive {
 
     // Default poses – set these to what makes sense for you
     private Pose startingPose = new Pose(0, 0, 0);
-    private Pose parkingPose  = new Pose(60, 60, 0); // placeholder
+    private Pose parkingPose  = new Pose(90, 35.5, Math.PI); // placeholder
 
-    public PedroDrive(HardwareMap hardwareMap) {
+    public PedroDrive(HardwareMap hardwareMap, Pose startingPose) {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startingPose);
         follower.update();
@@ -90,7 +90,7 @@ public class PedroDrive {
     }
 
     /** Drive from current pose to parkingPose using Pedro path. */
-    public void driveToParking() {
+    public void driveToParking(Pose parkingPose) {
         PathChain parkingPath = buildPathTo(parkingPose);
         follower.followPath(parkingPath);
         automatedDrive = true;

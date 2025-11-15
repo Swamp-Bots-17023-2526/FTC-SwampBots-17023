@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
-@TeleOp(name = "TeleopRed", group = "Main")
-public class TeleopRed extends OpMode {
+@TeleOp(name = "TeleopBlue", group = "Main")
+public class TeleopBlue extends OpMode {
 
     private PedroDrive drive;
     private Launcher launcher;
@@ -26,20 +26,21 @@ public class TeleopRed extends OpMode {
     private boolean prevRightStickButton = false;
 
     // Example auto-aim target (change to your real target coordinates)
-    private static final double FACE_X = 132;   // field X of shooting target
+    private static final double FACE_X = 12;   // field X of shooting target
     private static final double FACE_Y = 139;   // field Y of shooting target
 
     // Pose reset location (change to something meaningful for you)
-    private static final double RESET_X = 9;
+    private static final double RESET_X = 135;
     private static final double RESET_Y = 9;
-    private static final double RESET_H = 0.0; // radians
+    private static final double RESET_H = Math.PI; // radians
 
     // Launcher shot velocities (tune these)
     private static final double LOW_VELOCITY  = 1800;
     private static final double HIGH_VELOCITY = 2000;
 
     private Pose parkingPose  = new Pose(54, 35.5, Math.PI); // placeholder
-    private Pose startingPose  = new Pose(81,10,0); // placeholder
+    private Pose startingPose = new Pose(63,10,Math.PI);
+
 
 
     @Override
@@ -49,7 +50,7 @@ public class TeleopRed extends OpMode {
         intake   = new Intake(hardwareMap);
         lift     = new Lift(hardwareMap);
 
-        telemetry.addLine("TeleopRed initialized");
+        telemetry.addLine("TeleopBlue initialized");
     }
 
     @Override
@@ -61,8 +62,8 @@ public class TeleopRed extends OpMode {
     public void loop() {
 
         // ----------------- DRIVE (field-centric) -----------------
-        double lx = gamepad1.left_stick_x;   // left stick: strafe
-        double ly = gamepad1.left_stick_y;   // left stick: forward/back
+        double lx = - gamepad1.left_stick_x;   // left stick: strafe
+        double ly = - gamepad1.left_stick_y;   // left stick: forward/back
         double rx = gamepad1.right_stick_x;  // right stick: rotation
 
         drive.driveFieldCentric(lx, ly, rx);
@@ -116,12 +117,16 @@ public class TeleopRed extends OpMode {
         // ----------------- LIFT / PARKING (DPAD) -----------------
 
         // dpad up - move to park (Pedro auto path)
+        if (gamepad1.dpad_up && !prevDpadUp) {
+            drive.driveToParking(parkingPose);
+        }
 
         // dpad right - lift the robot (extend lift)
         if (gamepad1.dpad_up) {
             lift.moveUp();
         }
 
+        // dpad down - stop auto moving (cancel Pedro auto path)
         if (gamepad1.dpad_down) {
             lift.moveDownSlow();
         }
