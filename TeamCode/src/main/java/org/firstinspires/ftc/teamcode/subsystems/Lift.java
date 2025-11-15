@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Lift {
-
+//
     private final DcMotorEx liftMotor;
 
     // === PRESET POSITIONS (TUNE THESE!) ===
