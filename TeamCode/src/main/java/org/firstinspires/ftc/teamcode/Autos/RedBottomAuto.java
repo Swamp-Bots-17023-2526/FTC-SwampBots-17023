@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.Autos;
 
 
-import static org.firstinspires.ftc.teamcode.autos.Poses.*;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;

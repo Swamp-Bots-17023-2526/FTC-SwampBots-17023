@@ -116,10 +116,10 @@ public class BlueBottomAuto extends OpMode {
                 //pause
                 //flywheel shoot
                 Intake.intakeIn();
-                Launcher.launch(2000, true);
 
                 follower.followPath(moveToShoot, true);
                 //for shooting 2 balls
+                Launcher.launch(2000, true);
 
                 setPathState(1);
                 break;
