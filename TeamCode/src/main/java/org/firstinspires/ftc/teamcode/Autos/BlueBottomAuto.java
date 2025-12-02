@@ -13,15 +13,18 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
+import kotlinx.coroutines.Delay;
+
 @Autonomous(name = "BlueBottom", group = "OpModes")
 public class BlueBottomAuto extends OpMode {
 
+    //KEEP INTAKE ON AT ALL TIME SO BALL DON'T FALL OUT
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
-    private Intake intake;
-    private Launcher Shooter;
-    private Lift lift;
+    private Intake Intake;
+    private Launcher Launcher;
+    private Lift Lift;
     private int pathState;
 
     //for red
@@ -112,6 +115,9 @@ public class BlueBottomAuto extends OpMode {
             case 0:
                 //pause
                 //flywheel shoot
+                Intake.intakeIn();
+                Launcher.launch(2000, true);
+
                 follower.followPath(moveToShoot, true);
                 //for shooting 2 balls
 
@@ -134,7 +140,8 @@ public class BlueBottomAuto extends OpMode {
                 if (!follower.isBusy()) {
                     follower.followPath(moveToShoot1, true);
                     //pause
-
+                    // change vel
+                    Launcher.launch(2000, true);
                     setPathState(4);
                 }
                 break;
@@ -157,7 +164,7 @@ public class BlueBottomAuto extends OpMode {
                 if (!follower.isBusy()) {
                     //pause
                     follower.followPath(moveToShoot2, true);
-
+                    Launcher.launch(2000, true);
                     setPathState(7);
                 }
                 break;
@@ -178,9 +185,14 @@ public class BlueBottomAuto extends OpMode {
             case 9:
                 if (!follower.isBusy()) {
                     //pause
+                    Launcher.launch(2000, true);
+
                     follower.followPath(moveToShoot3, true);
 
                     setPathState(10);
+
+                    Intake.stop();
+                    Launcher.stopAll();
                 }
                 break;
         }
