@@ -119,16 +119,11 @@ public class TeleopRed extends OpMode {
 
         // dpad right - lift the robot (extend lift)
         if (gamepad1.dpad_up) {
-            lift.moveUp();
+            launcher.manualPriming();
         }
 
         if (gamepad1.dpad_down) {
-            lift.moveDownSlow();
-        }
-
-        // dpad left - kill lift
-        if (gamepad1.dpad_left && !prevDpadLeft) {
-            lift.stopAll();
+            launcher.manualUnprime();
         }
 
         // ----------------- AUTO AIM (right stick pressed) -----------------
@@ -149,7 +144,10 @@ public class TeleopRed extends OpMode {
             drive.resetPose(RESET_X, RESET_Y, RESET_H);
         }
 
+        boolean cancelAuto = false;
+
         // ----------------- UPDATE SUBSYSTEMS -----------------
+        drive.update(cancelAuto);
         launcher.update();
         intake.update();
         lift.update();
@@ -168,11 +166,10 @@ public class TeleopRed extends OpMode {
         telemetry.addLine("=== CONTROLS (GAMEPAD1) ===");
         telemetry.addLine("Movement:  LS = move (field centric), RS X = rotate");
         telemetry.addLine("Intake:    A = intake, B = outtake");
-        telemetry.addLine("Launcher:  RT = spool flywheels");
+        telemetry.addLine("Launcher:  DPAD Up = prime hammer");
+        telemetry.addLine("Launcher:  DPAD Down = reset hammer");
         telemetry.addLine("           LT = fire (LOW vel), LB = fire (HIGH vel), RB = hold if 2 artifacts");
         telemetry.addLine("           Y = advance 2 -> 1, X = stop launcher + intake, hammer open");
-        telemetry.addLine("Lift:      Dpad Right = lift robot, Dpad Left = kill lift");
-        telemetry.addLine("Parking:   Dpad Up = auto move to park, Dpad Down = stop auto moving");
         telemetry.addLine("Auto Aim:  Right stick press = toggle auto aim");
         telemetry.addLine("Pose:      Start = reset pose to preset location");
 

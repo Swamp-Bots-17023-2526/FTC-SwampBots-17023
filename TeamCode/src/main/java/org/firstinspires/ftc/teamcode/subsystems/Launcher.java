@@ -15,7 +15,7 @@ public class Launcher {
     private final DcMotorEx flywheelLeft, flywheelRight;
 
     // Hammer positions – tune on robot
-    private static final double HAMMER_OPEN   = 0.9;
+    private static final double HAMMER_OPEN   = 0.93;
     private static final double HAMMER_PRIMED = 0.7;
     private static final double HAMMER_FIRE   = 0.6;
 
@@ -118,6 +118,18 @@ public class Launcher {
         // Only allow manual rotation when IDLE so it doesn't clash with auto firing
         if (state == State.IDLE) {
             wheel.setPower(WHEEL_FEED_POWER);
+        }
+    }
+
+    public void manualPriming() {
+        if (state == State.IDLE) {
+            hammer.setPosition(HAMMER_PRIMED);
+        }
+    }
+
+    public void manualUnprime() {
+        if (state == State.IDLE) {
+            hammer.setPosition(HAMMER_OPEN);
         }
     }
 
