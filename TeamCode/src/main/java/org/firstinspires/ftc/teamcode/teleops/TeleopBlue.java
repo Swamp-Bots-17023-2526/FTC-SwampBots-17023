@@ -116,11 +116,6 @@ public class TeleopBlue extends OpMode {
 
         // ----------------- LIFT / PARKING (DPAD) -----------------
 
-        // dpad up - move to park (Pedro auto path)
-        if (gamepad1.dpad_up && !prevDpadUp) {
-            drive.driveToParking(parkingPose);
-        }
-
         // dpad right - lift the robot (extend lift)
         if (gamepad1.dpad_up) {
             launcher.manualPriming();
