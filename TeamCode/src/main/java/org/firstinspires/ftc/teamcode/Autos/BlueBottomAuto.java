@@ -53,6 +53,7 @@ public class BlueBottomAuto extends OpMode {
     private final Pose BlueObjects3 = mirrorPose(RedObjects3);
     private final Pose BlueEndpickup3 = mirrorPose(RedEndpickup3);
 
+
     private PathChain moveToShoot, moveToObjects1, pickupObjects1, moveToShoot1, moveToObjects2, pickupObjects2, moveToShoot2, moveToObjects3, pickupObjects3, moveToShoot3;
     public void buildPaths() {
 
