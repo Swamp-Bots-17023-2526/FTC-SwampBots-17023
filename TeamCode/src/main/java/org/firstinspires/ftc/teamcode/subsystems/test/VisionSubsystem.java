@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.test;
 
 import android.util.Size;
 
@@ -32,7 +32,7 @@ public class VisionSubsystem{
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 //Can change depending on the units we want
-                .setOutputUnits(DistanceUnit.CM, AngleUnit.DEGREES)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();
 
         VisionPortal.Builder builder = new VisionPortal.Builder();

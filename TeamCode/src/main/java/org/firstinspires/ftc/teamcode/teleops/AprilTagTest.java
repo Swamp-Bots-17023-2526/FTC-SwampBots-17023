@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode; // Extending OpMode, not LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
+
+import org.firstinspires.ftc.teamcode.subsystems.test.VisionSubsystem;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import java.util.List;
 
 @Autonomous(name = "AprilTagTest ")
 public class AprilTagTest extends OpMode {

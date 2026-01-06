@@ -17,7 +17,7 @@ public class LauncherTestTeleOp extends OpMode {
     private boolean prevLTPressed = false;
 
     // You can tune this to match your real shot speed
-    private static final double TEST_VELOCITY = 1800;
+    private static double TEST_VELOCITY = 1800;
 
     @Override
     public void init() {
@@ -57,6 +57,13 @@ public class LauncherTestTeleOp extends OpMode {
             launcher.stopAll();
         }
 
+        if(gamepad1.dpad_up){
+            TEST_VELOCITY = TEST_VELOCITY + 100;
+        }
+        if(gamepad1.dpad_down){
+            TEST_VELOCITY = TEST_VELOCITY - 100;
+        }
+
         // --------- Subsystem update ---------
         launcher.update();
 
@@ -65,6 +72,7 @@ public class LauncherTestTeleOp extends OpMode {
         telemetry.addData("Target Vel", "%.1f", launcher.getTargetVelocity());
         telemetry.addData("Left Vel", "%.1f", launcher.getLeftVelocity());
         telemetry.addData("Right Vel", "%.1f", launcher.getRightVelocity());
+        telemetry.addData("Current Vel:" ,"%.1f", TEST_VELOCITY);
         telemetry.update();
 
         // Update edge-detection history
