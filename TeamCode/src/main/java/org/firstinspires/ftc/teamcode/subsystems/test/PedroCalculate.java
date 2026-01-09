@@ -60,7 +60,7 @@ public class PedroCalculate {
 
         //use desmos to find a regression line
         //usea table w distance and rpm and generate a best fit line.
-        double velocity = 5*distance + 234;
+        double velocity = 1.56235*Math.pow(distance,2) - 171.68518*distance + 6334.2165;
 
         return velocity;
     }

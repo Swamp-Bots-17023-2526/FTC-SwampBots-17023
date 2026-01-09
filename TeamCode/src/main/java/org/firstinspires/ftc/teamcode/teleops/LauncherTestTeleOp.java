@@ -16,8 +16,12 @@ public class LauncherTestTeleOp extends OpMode {
     private boolean prevY = false;
     private boolean prevLTPressed = false;
 
+    // --- NEW: Added trackers for D-pad ---
+    private boolean prevDpadUp = false;
+    private boolean prevDpadDown = false;
+
     // You can tune this to match your real shot speed
-    private static double TEST_VELOCITY = 1800;
+    private double TEST_VELOCITY = 1800; // Removed 'static' (usually better for OpModes)
 
     @Override
     public void init() {
@@ -57,12 +61,18 @@ public class LauncherTestTeleOp extends OpMode {
             launcher.stopAll();
         }
 
-        if(gamepad1.dpad_up){
-            TEST_VELOCITY = TEST_VELOCITY + 100;
+        // --- NEW: Velocity Adjustments with Edge Detection ---
+
+        // Only increase ONCE per press
+        if(gamepad1.dpad_up && !prevDpadUp){
+            TEST_VELOCITY = TEST_VELOCITY + 50;
         }
-        if(gamepad1.dpad_down){
-            TEST_VELOCITY = TEST_VELOCITY - 100;
+
+        // Only decrease ONCE per press
+        if(gamepad1.dpad_down && !prevDpadDown){
+            TEST_VELOCITY = TEST_VELOCITY - 50;
         }
+
 
         // --------- Subsystem update ---------
         launcher.update();
@@ -80,5 +90,9 @@ public class LauncherTestTeleOp extends OpMode {
         prevLeftBumper  = gamepad1.left_bumper;
         prevY           = gamepad1.y;
         prevLTPressed   = ltPressed;
+
+        // --- NEW: Update D-pad history ---
+        prevDpadUp      = gamepad1.dpad_up;
+        prevDpadDown    = gamepad1.dpad_down;
     }
 }
