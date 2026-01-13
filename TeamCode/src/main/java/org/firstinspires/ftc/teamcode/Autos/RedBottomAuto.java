@@ -42,22 +42,26 @@ public class RedBottomAuto extends OpMode {
             case 0:
                 follower.followPath(paths.Path1);
                 setPathState(1);
+                pew.launch(1750,true);
                 break;
             case 1:
                 if(!follower.isBusy()) {
                     follower.followPath(paths.Path2);
+                    nom.intakeIn();
                     setPathState(2);
                 }
                     break;
             case 2:
                 if(!follower.isBusy()) {
                     follower.followPath(paths.Path3);
+                    nom.stop();
                     setPathState(3);
                 }
                     break;
             case 3:
                 if(!follower.isBusy()) {
                     follower.followPath(paths.Path4);
+                    pew.launch(1750,true);
                     setPathState(4);
                 }
                     break;
