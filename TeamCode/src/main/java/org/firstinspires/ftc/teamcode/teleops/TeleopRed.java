@@ -35,6 +35,7 @@ public class TeleopRed extends OpMode {
 
     // Launcher shot velocities (tune these)
     private static final double LOW_VELOCITY  = 1800;
+    //CHANGE HIGH VELOCITY DOWN
     private static final double HIGH_VELOCITY = 2000;
 
     @Override

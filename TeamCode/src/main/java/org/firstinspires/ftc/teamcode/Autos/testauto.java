@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -13,58 +14,33 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-import org.firstinspires.ftc.teamcode.paths.Paths;
-import kotlinx.coroutines.Delay;
-
-
-/*
- *
- * START OP MODE RIGHT HALF (RED SIDE)
- * ON BOTTOM
- * ON TAPE
- * FACING TOWARDS OPPOSITE WALL
- *
- * */
-@Autonomous(name = "redbottomauto", group = "redbottomauto")
-public class RedBottomAuto extends OpMode {
-
+@Autonomous(name = "testauto1", group = "testauto1")
+public class testauto extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Intake nom;
     private Launcher pew;
+    private Lift uppies;
     private int pathState;
 
-    Paths paths = new Paths(follower);
+    private final Pose startPose = new Pose(87,9,90);
+    private final Pose endPose = new Pose(96,96,180);
 
 
-    public void autonomousPathUpdate() {
+    private PathChain move1;
+
+    public void buildPaths(){
+        move1 = follower.pathBuilder()
+                .addPath(new BezierLine(startPose,endPose))
+                .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading())
+                .build();
+    }
+
+    public void autoPathUpdates(){
         switch (pathState) {
             case 0:
-                follower.followPath(paths.Path1);
-                setPathState(1);
-                break;
-            case 1:
-                if(!follower.isBusy()) {
-                    follower.followPath(paths.Path2);
-                    setPathState(2);
-                }
-                    break;
-            case 2:
-                if(!follower.isBusy()) {
-                    follower.followPath(paths.Path3);
-                    setPathState(3);
-                }
-                    break;
-            case 3:
-                if(!follower.isBusy()) {
-                    follower.followPath(paths.Path4);
-                    setPathState(4);
-                }
-                    break;
-            case 4:
-                if(!follower.isBusy()) {
-                    setPathState(-1);
-                }
+                follower.followPath(move1);
+                setPathState(-1);
                 break;
         }
     }
@@ -83,7 +59,7 @@ public class RedBottomAuto extends OpMode {
 
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
-        autonomousPathUpdate();
+        autoPathUpdates();
 
         // Feedback to Driver Hub for debugging
         telemetry.addData("path state", pathState);
@@ -104,7 +80,8 @@ public class RedBottomAuto extends OpMode {
 
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(paths.startRedBottom);
+        buildPaths();
+        follower.setStartingPose(startPose);
 
         opmodeTimer.resetTimer();
         setPathState(0);
@@ -133,6 +110,4 @@ public class RedBottomAuto extends OpMode {
     @Override
     public void stop() {
     }
-
-
 }
