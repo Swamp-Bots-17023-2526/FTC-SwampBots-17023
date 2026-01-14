@@ -111,7 +111,7 @@ public class TeleOpTest extends LinearOpMode {
 
             // Drive Command
             boolean cancelAuto = Math.abs(gamepad1.left_stick_x) > 0.1 || Math.abs(gamepad1.left_stick_y) > 0.1;
-            drive.driveFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
+            drive.driveFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
             drive.update(cancelAuto);
 
             // --- 3. INTAKE CONTROLS (NEW) ---
