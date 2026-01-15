@@ -33,6 +33,13 @@ public class PedroCalculate {
         robx = currentPose.getX();
         roby = currentPose.getY();
     }
+
+    public double getPoseX(){
+        return currentPose.getX();
+    }
+    public double getPoseY(){
+        return currentPose.getY();
+    }
     public void setGoal(){
         if(isRed = true){
             goalY = goalPoseRed.getY();

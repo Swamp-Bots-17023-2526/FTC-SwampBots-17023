@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.pedropathing.geometry.Pose; // Import needed for getting current pose
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
@@ -15,7 +16,7 @@ public class TeleOpTest extends LinearOpMode {
     private PedroDrive drive;
     private Launcher launcher;
     private PedroCalculate calculator;
-    private Intake intake; // <--- NEW
+    private Intake intake;
 
     // --- Enums ---
     private enum RpmMode { AUTO_TARGETING, MANUAL_FIXED }
@@ -34,7 +35,8 @@ public class TeleOpTest extends LinearOpMode {
     private boolean lastLeftStickButton = false;
     private boolean lastDpadUp = false;
     private boolean lastDpadDown = false;
-    private boolean lastButtonX = false; // For Intake Toggle
+    private boolean lastButtonX = false;
+    private boolean lastBackButton = false; // Added to prevent rapid resetting
 
     // --- Goal Coordinates ---
     private static final double RED_GOAL_X = 138;
@@ -48,17 +50,35 @@ public class TeleOpTest extends LinearOpMode {
         drive = new PedroDrive(hardwareMap);
         launcher = new Launcher(hardwareMap);
         calculator = new PedroCalculate(hardwareMap);
-        intake = new Intake(hardwareMap); // <--- NEW
+        intake = new Intake(hardwareMap);
 
         // 2. Alliance Selection
         while (!isStarted() && !isStopRequested()) {
-            if (gamepad1.a) isRedAlliance = true;
-            if (gamepad1.x) isRedAlliance = false;
 
-            telemetry.addLine("=== FULL ROBOT INIT ===");
-            telemetry.addData("Alliance", isRedAlliance ? "RED" : "BLUE");
-            telemetry.addLine("Controls: X=Intake, Triggers=Shoot");
-            telemetry.update();
+            // 2. Alliance Selection
+            while (!isStarted() && !isStopRequested()) {
+                if (gamepad1.a) isRedAlliance = true;
+                if (gamepad1.x) isRedAlliance = false;
+
+                telemetry.addLine("=== FULL ROBOT INIT ===");
+                telemetry.addData("Alliance", isRedAlliance ? "RED" : "BLUE");
+                telemetry.update();
+            }
+
+            // 3. Calculator Setup & STARTING POSE SETUP <--- ADD THIS
+            if (isRedAlliance) {
+                calculator.setRed();
+                // Set Red Side Start (Example: Against the wall on Red side)
+                // You must change these numbers to match where you actually place the robot!
+                drive.setStartingPose(84.072, 83.448, Math.toRadians(45));
+            } else {
+                calculator.setBlue();
+                // Set Blue Side Start
+                drive.setStartingPose(9, 120, Math.toRadians(0));
+            }
+
+            calculator.setGoal();
+            drive.startTeleOp();
         }
 
         // 3. Calculator Setup
@@ -104,17 +124,32 @@ public class TeleOpTest extends LinearOpMode {
             }
             lastRightBumper = gamepad1.right_bumper;
 
-            // Auto-Park (Start) & Reset Pose (Back)
+            // Auto-Park (Start)
             if (gamepad1.start && !lastStartButton) drive.driveToParking();
             lastStartButton = gamepad1.start;
-            if (gamepad1.back) drive.resetPose(0,0,0);
+
+            // --- RESET HEADING LOGIC (Back Button) ---
+            if (gamepad1.back && !lastBackButton) {
+                // Get the current known position (X, Y, Heading)
+                Pose currentPose = drive.getPose();
+
+                // Reset to: Current X, Current Y, but forcing Heading to 0 (Forward)
+                // This keeps your position on the field map but fixes gyro drift.
+                drive.resetPose(currentPose.getX(), currentPose.getY(), 0);
+
+                // If you prefer to reset to 180 (facing back) for Red Alliance, use:
+                // double resetAngle = isRedAlliance ? Math.toRadians(180) : Math.toRadians(0);
+                // drive.resetPose(currentPose.getX(), currentPose.getY(), resetAngle);
+            }
+            lastBackButton = gamepad1.back;
 
             // Drive Command
             boolean cancelAuto = Math.abs(gamepad1.left_stick_x) > 0.1 || Math.abs(gamepad1.left_stick_y) > 0.1;
-            drive.driveFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            // Note: Added negative signs to stick inputs if your drive feels inverted, remove if not needed.
+            drive.driveFieldCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
             drive.update(cancelAuto);
 
-            // --- 3. INTAKE CONTROLS (NEW) ---
+            // --- 3. INTAKE CONTROLS ---
 
             // Button X: Toggle Intake IN / OFF
             if (gamepad1.x && !lastButtonX) {
@@ -127,11 +162,9 @@ public class TeleOpTest extends LinearOpMode {
             lastButtonX = gamepad1.x;
 
             // Button Y: Hold to OUTTAKE (Reverse)
-            // This overrides the toggle. When released, it stops.
             if (gamepad1.y) {
                 intake.intakeOut();
             } else if (!gamepad1.x && intake.getState() == Intake.State.OUTTAKING) {
-                // If we released Y, and we aren't pressing X, stop.
                 intake.stop();
             }
 
@@ -150,7 +183,7 @@ public class TeleOpTest extends LinearOpMode {
             // Button B: STOP ALL (Safety)
             if (gamepad1.b) {
                 launcher.stopAll();
-                intake.stop(); // Stop intake too!
+                intake.stop();
             }
 
             // --- 5. ADJUSTMENTS (D-PAD) ---
@@ -168,13 +201,12 @@ public class TeleOpTest extends LinearOpMode {
             }
             lastDpadDown = gamepad1.dpad_down;
 
-            // D-Pad LEFT/RIGHT: Manual Launcher Unjam (Moved from X/Y)
+            // D-Pad LEFT/RIGHT: Manual Launcher Unjam
             if (gamepad1.dpad_left) {
                 launcher.manualWheelForward();
             } else if (gamepad1.dpad_right) {
                 launcher.manualWheelBack();
             } else {
-                // Stop manual wheel if not firing/advancing
                 String lState = launcher.getStateName();
                 if (!lState.contains("FIRING") && !lState.contains("ADVANCING")) {
                     launcher.manualWheelOff();
