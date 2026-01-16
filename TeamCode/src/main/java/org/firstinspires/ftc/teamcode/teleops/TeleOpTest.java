@@ -49,7 +49,7 @@ public class TeleOpTest extends LinearOpMode {
 
             telemetry.addLine("=== MANUAL TELEOP INIT ===");
             telemetry.addData("Alliance", isRedAlliance ? "RED" : "BLUE");
-            telemetry.addData("Press: a for Red, x for Blue");
+            telemetry.addLine("Press: a for Red, x for Blue");
             telemetry.addLine("RPM Mode: MANUAL ONLY");
             telemetry.update();
         }
