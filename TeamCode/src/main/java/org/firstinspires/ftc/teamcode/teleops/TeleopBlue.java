@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 @TeleOp(name = "TeleopBlue", group = "Main")
 public class TeleopBlue extends OpMode {
@@ -15,8 +14,6 @@ public class TeleopBlue extends OpMode {
     private PedroDrive drive;
     private Launcher launcher;
     private Intake intake;
-    private Lift lift;
-
     // Edge detection
     private boolean prevY = false;
     private boolean prevX = false;
@@ -48,7 +45,6 @@ public class TeleopBlue extends OpMode {
         drive    = new PedroDrive(hardwareMap, startingPose);
         launcher = new Launcher(hardwareMap);
         intake   = new Intake(hardwareMap);
-        lift     = new Lift(hardwareMap);
 
         telemetry.addLine("TeleopBlue initialized");
     }
@@ -125,6 +121,14 @@ public class TeleopBlue extends OpMode {
             launcher.manualUnprime();
         }
 
+        if (gamepad1.dpad_right) {
+            launcher.manualFeedSweep();
+        }
+
+        if (gamepad1.dpad_left) {
+            launcher.manualFeedOpen();
+        }
+
         // ----------------- AUTO AIM (right stick pressed) -----------------
 
         // right joystick pressed - toggle auto aim (face target)
@@ -149,7 +153,6 @@ public class TeleopBlue extends OpMode {
         drive.update(cancelAuto);
         launcher.update();
         intake.update();
-        lift.update();
 
         // ----------------- TELEMETRY -----------------
         telemetry.addLine("=== DRIVE ===");
@@ -167,6 +170,9 @@ public class TeleopBlue extends OpMode {
         telemetry.addLine("Intake:    A = intake, B = outtake");
         telemetry.addLine("Launcher:  DPAD Up = prime hammer");
         telemetry.addLine("Launcher:  DPAD Down = reset hammer");
+        telemetry.addLine("Intake:  DPAD Right = feed sweep");
+        telemetry.addLine("Intake:  DPAD Left = feed open");
+
         telemetry.addLine("           LT = fire (LOW vel), LB = fire (HIGH vel), RB = hold if 2 artifacts");
         telemetry.addLine("           Y = advance 2 -> 1, X = stop launcher + intake, hammer open");
         telemetry.addLine("Auto Aim:  Right stick press = toggle auto aim");
@@ -175,7 +181,6 @@ public class TeleopBlue extends OpMode {
         telemetry.addLine();
         telemetry.addLine("=== SUBSYSTEM STATES ===");
         telemetry.addData("Launcher State", launcher.getStateName());
-        telemetry.addData("Lift State", lift.getStateName());
         telemetry.addData("Intake State", intake.getState());
 
         telemetry.update();

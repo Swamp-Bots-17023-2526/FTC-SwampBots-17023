@@ -11,10 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-
-import kotlinx.coroutines.Delay;
 
 
 /*
@@ -32,7 +29,6 @@ public class RedBottomAuto extends OpMode {
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Intake nom;
     private Launcher pew;
-    private Lift uppies;
     private int pathState;
 
     private final Pose startRedClose = new Pose(118, 118, Math.toRadians(225));//right up against goal, facing away

@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 @TeleOp(name = "TeleopRed", group = "Main")
 public class TeleopRed extends OpMode {
@@ -15,7 +14,6 @@ public class TeleopRed extends OpMode {
     private PedroDrive drive;
     private Launcher launcher;
     private Intake intake;
-    private Lift lift;
 
     // Edge detection
     private boolean prevY = false;
@@ -47,7 +45,6 @@ public class TeleopRed extends OpMode {
         drive    = new PedroDrive(hardwareMap, startingPose);
         launcher = new Launcher(hardwareMap);
         intake   = new Intake(hardwareMap);
-        lift     = new Lift(hardwareMap);
 
         telemetry.addLine("TeleopRed initialized");
     }
@@ -150,7 +147,6 @@ public class TeleopRed extends OpMode {
         drive.update(cancelAuto);
         launcher.update();
         intake.update();
-        lift.update();
 
         // ----------------- TELEMETRY -----------------
         telemetry.addLine("=== DRIVE ===");
@@ -176,7 +172,6 @@ public class TeleopRed extends OpMode {
         telemetry.addLine();
         telemetry.addLine("=== SUBSYSTEM STATES ===");
         telemetry.addData("Launcher State", launcher.getStateName());
-        telemetry.addData("Lift State", lift.getStateName());
         telemetry.addData("Intake State", intake.getState());
 
         telemetry.update();

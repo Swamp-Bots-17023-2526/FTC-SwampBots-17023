@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -21,7 +20,6 @@ public class BlueBottomAuto extends OpMode {
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Intake intake;
     private Launcher Shooter;
-    private Lift lift;
     private int pathState;
 
     //for red

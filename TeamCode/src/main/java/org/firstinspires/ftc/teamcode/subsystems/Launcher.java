@@ -133,6 +133,18 @@ public class Launcher {
         }
     }
 
+    public void manualFeedSweep() {
+        if (state == State.IDLE) {
+            feedsweep.setPosition(FEEDSWEEP_FEED);
+        }
+    }
+
+    public void manualFeedOpen() {
+        if (state == State.IDLE) {
+            feedsweep.setPosition(FEEDSWEEP_RETRACTED);
+        }
+    }
+
     public void manualWheelBack() {
         // Only allow manual rotation when IDLE so it doesn't clash with auto firing
         if (state == State.IDLE) {
