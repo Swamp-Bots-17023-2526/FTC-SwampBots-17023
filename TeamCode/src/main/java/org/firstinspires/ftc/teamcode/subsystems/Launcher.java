@@ -172,9 +172,11 @@ public class Launcher {
 
         hammer.setPosition(HAMMER_OPEN);
         wheel.setPower(WHEEL_FEED_POWER);
+        feedsweep.setPosition(FEEDSWEEP_FEED);
 
         timer.reset();
         state = State.ADVANCING_SECOND;
+        feedsweep.setPosition((FEEDSWEEP_RETRACTED));
     }
 
     /** Hard stop everything. Used for X button: stop launcher + intake. */
