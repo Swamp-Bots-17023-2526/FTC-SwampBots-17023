@@ -38,8 +38,8 @@ public class BlueBottomAuto extends OpMode {
 
                 // Wait 0.5 seconds for the manual wheel to do its job
                 if(actionTimer.getElapsedTimeSeconds() > 0.5) {
-                    pew.manualWheelOff(); // Stop the wheel so it doesn't feed while spinning up
-                    pew.preSpin(1750);    // Now start the flywheels
+                    pew.manualWheelOff(); // no feed up while spin up
+                    pew.preSpin(1750);    // spin flywheels
 
                     actionTimer.resetTimer(); // Reset timer for the spin-up wait
                     setPathState(2);
@@ -51,7 +51,7 @@ public class BlueBottomAuto extends OpMode {
 
                 // Wait 1.5 seconds for flywheels to reach speed
                 if(actionTimer.getElapsedTimeSeconds() > 1.5) {
-                    pew.launch(1750, true); // Fire!
+                    pew.launch(1750, true);
                     setPathState(3);
                 }
                 break;

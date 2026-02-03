@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.PedroDrive;
 
 @TeleOp(name = "Full Robot TeleOp (Manual Only)", group = "Competition")
-public class TeleOpTest extends LinearOpMode {
+public class TeleOpMain extends LinearOpMode {
 
     // --- Subsystems ---
     private PedroDrive drive;
@@ -88,7 +88,7 @@ public class TeleOpTest extends LinearOpMode {
 
             // Drive Command
             // We pass 'false' to update() because there is no auto-path to cancel anymore
-            drive.driveFieldCentric(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            drive.driveFieldCentric(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             drive.update(false);
 
 
