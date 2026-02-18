@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "Simple 2 Second Drive", group = "Test")
-public class testauto extends LinearOpMode {
+public class Simpledrive_forward extends LinearOpMode {
 
     @Override
     public void runOpMode() {

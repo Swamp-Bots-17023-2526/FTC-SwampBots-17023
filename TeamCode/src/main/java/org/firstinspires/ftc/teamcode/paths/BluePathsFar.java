@@ -5,13 +5,13 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
-public class BluePaths {
+public class BluePathsFar {
     public PathChain Path1, Path2, Path3, Path4;
 
     // Mirrored Start Pose: X = 144 - 86.620 = 57.38
     public final Pose startBlueBottom = new Pose(57.38, 9.225, Math.toRadians(90));
 
-    public BluePaths(Follower follower) {
+    public BluePathsFar(Follower follower) {
         // Path 1: Move to Shooting Position
         // End X = 144 - 83.995 = 60.005
         // Heading 45 -> 135

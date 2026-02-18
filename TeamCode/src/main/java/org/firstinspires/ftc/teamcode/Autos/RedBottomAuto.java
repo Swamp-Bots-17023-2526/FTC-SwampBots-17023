@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.paths.Paths;
+import org.firstinspires.ftc.teamcode.paths.RedPathsFar;
 
 @Autonomous(name = "redbottomauto", group = "redbottomauto")
 public class RedBottomAuto extends OpMode {
@@ -18,7 +18,7 @@ public class RedBottomAuto extends OpMode {
     private Intake nom;
     private Launcher pew;
     private int pathState;
-    private Paths paths;
+    private RedPathsFar paths;
 
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -130,7 +130,7 @@ public class RedBottomAuto extends OpMode {
 
         // Initialize Follower & Paths
         follower = Constants.createFollower(hardwareMap);
-        paths = new Paths(follower);
+        paths = new RedPathsFar(follower);
 
         follower.setStartingPose(paths.startRedBottom);
         setPathState(0);

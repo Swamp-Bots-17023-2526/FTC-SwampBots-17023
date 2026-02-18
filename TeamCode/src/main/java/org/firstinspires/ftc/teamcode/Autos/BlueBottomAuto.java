@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.paths.BluePaths; // Import the Blue Paths
+import org.firstinspires.ftc.teamcode.paths.BluePathsFar; // Import the Blue Paths
 
 @Autonomous(name = "bluebottomauto", group = "bluebottomauto")
 public class BlueBottomAuto extends OpMode {
@@ -18,7 +18,7 @@ public class BlueBottomAuto extends OpMode {
     private Intake nom;
     private Launcher pew;
     private int pathState;
-    private BluePaths paths; // Use BluePaths class
+    private BluePathsFar paths; // Use BluePaths class
 
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -128,7 +128,7 @@ public class BlueBottomAuto extends OpMode {
 
         // Initialize Follower & Paths
         follower = Constants.createFollower(hardwareMap);
-        paths = new BluePaths(follower); // Initialize BluePaths
+        paths = new BluePathsFar(follower); // Initialize BluePaths
 
         follower.setStartingPose(paths.startBlueBottom); // Use Blue Start Pose
         setPathState(0);

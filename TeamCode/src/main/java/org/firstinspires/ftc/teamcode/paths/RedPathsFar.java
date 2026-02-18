@@ -5,12 +5,12 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
-public class Paths {
-    public PathChain Path1, Path2, Path3, Path4;
+public class RedPathsFar {
+    public PathChain Path1, Path2, Path3, Path4, Path5;
 
     public final Pose startRedBottom = new Pose(86.620,9.225,Math.toRadians(90));
 
-    public Paths(Follower follower) {
+    public RedPathsFar(Follower follower) {
         Path1 = follower.pathBuilder().addPath(
                         new BezierLine(
                                 new Pose(86.620, 9.225),
@@ -50,5 +50,6 @@ public class Paths {
                 ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
 
                 .build();
+
     }
 }
