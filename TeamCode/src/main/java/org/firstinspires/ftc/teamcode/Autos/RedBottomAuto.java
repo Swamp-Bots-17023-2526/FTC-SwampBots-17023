@@ -15,83 +15,101 @@ public class RedBottomAuto extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
+    private int pathState;
+
+    // Subsystems
     private Intake nom;
     private Launcher pew;
-    private int pathState;
+
+    // Paths
     private RedPathsFar paths;
 
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                // --- ACTION: Start Path & Manual Wheel Feed ---
+                // --- ACTION: Start Path 1 (Move to Shoot) ---
                 follower.followPath(paths.Path1);
 
-                // Run wheel forward briefly to seat the ring or unjam
-                pew.manualWheelForward();
+                // Spin up immediately so we are ready upon arrival
+                pew.preSpin(1750);
 
-                actionTimer.resetTimer();
                 setPathState(1);
                 break;
 
             case 1:
-                // --- ACTION: Wait for Wheel, Then Stop Wheel & Pre-Spin ---
+                // --- ACTION: Wait for Path 1 Completion ---
+                if(!follower.isBusy()) {
+                    // We have arrived at the shooting position.
+                    // Fire!
+                    pew.launch(1750, true);
 
-                // Wait 0.5 seconds for the manual wheel to do its job
-                if(actionTimer.getElapsedTimeSeconds() > 0.5) {
-                    pew.manualWheelOff(); // Stop the wheel so it doesn't feed while spinning up
-                    pew.preSpin(1750);    // Now start the flywheels
-
-                    actionTimer.resetTimer(); // Reset timer for the spin-up wait
+                    // Wait for the shot to finish
                     setPathState(2);
                 }
                 break;
 
             case 2:
-                // --- ACTION: Wait for Spin Up, Then Fire ---
+                // --- ACTION: Wait for Shot to Finish ---
+                if(!pew.isBusy()) {
+                    // Shot is done.
+                    // Start Path 2 (Move to Intake)
+                    follower.followPath(paths.Path2);
 
-                // Wait 1.5 seconds for flywheels to reach speed
-                if(actionTimer.getElapsedTimeSeconds() > 1.5) {
-                    pew.launch(1750, true); // Fire!
+                    // Turn on Intake
+                    nom.intakeIn();
+
                     setPathState(3);
                 }
                 break;
 
             case 3:
-                // --- ACTION: Wait for Path 1 to Finish ---
+                // --- ACTION: Wait for Path 2 (Intake Run) ---
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.Path2);
-                    nom.intakeIn();
+                    // Path 2 finished (Robot is at stack/intake pos).
+                    // Move to Path 3
+                    follower.followPath(paths.Path3);
+
+                    // Stop Intake (or keep it running if Path 3 is short/transfer)
+                    // Original code stopped it here:
+                    nom.stop();
+
                     setPathState(4);
                 }
                 break;
 
             case 4:
-                // --- ACTION: Wait for Path 2 to Finish ---
+                // --- ACTION: Wait for Path 3 ---
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.Path3);
-                    nom.stop();
+                    // Path 3 finished.
+                    // Start Path 4 (Return to Shooting Position)
+                    follower.followPath(paths.Path4);
+
+                    // Pre-spin again for the second shot
+                    pew.preSpin(1750);
+
                     setPathState(5);
                 }
                 break;
 
             case 5:
-                // --- ACTION: Wait for Path 3 to Finish ---
+                // --- ACTION: Wait for Path 4 (Arrival at Shoot) ---
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.Path4);
-
-                    // We can shoot immediately here because we didn't stop the flywheels?
-                    // Or if you stopped them, add another pre-spin state here.
-                    // Assuming you want to shoot immediately upon arrival:
+                    // Arrived. Fire second shot!
                     pew.launch(1750, true);
                     setPathState(6);
                 }
                 break;
 
             case 6:
-                // --- ACTION: End ---
-                if(!follower.isBusy()) {
+                // --- ACTION: Wait for Shot 2 to Finish ---
+                if(!pew.isBusy()) {
+                    // Done. End Auto.
                     setPathState(-1);
                 }
+                break;
+
+            case -1:
+                // --- ACTION: End / Idle ---
                 break;
         }
     }
@@ -103,17 +121,28 @@ public class RedBottomAuto extends OpMode {
 
     @Override
     public void loop() {
-        // Update subsystems every loop
+        // Update Subsystems
         pew.update();
         nom.update();
 
+        // Update Follower
         follower.update();
+
+        // Run Logic
         autonomousPathUpdate();
 
+        // Telemetry
         telemetry.addData("Path State", pathState);
-        telemetry.addData("Action Timer", actionTimer.getElapsedTimeSeconds());
+        telemetry.addData("Launcher Busy", pew.isBusy());
+
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
+
+        // Flywheel Telemetry
+        telemetry.addData("Target Vel", pew.getTargetVelocity());
+        telemetry.addData("Left Vel",   pew.getLeftVelocity());
+        telemetry.addData("Right Vel",  pew.getRightVelocity());
+
         telemetry.update();
     }
 

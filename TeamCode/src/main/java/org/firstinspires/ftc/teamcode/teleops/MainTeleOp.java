@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.subsystems.test.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.test.ShooterMath;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@TeleOp(name = "Pedro AutoAim TeleOp")
 public class MainTeleOp extends OpMode {
 
     private PedroDrive drive;
