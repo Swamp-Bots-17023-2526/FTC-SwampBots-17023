@@ -6,7 +6,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
 public class RedClosePath {
-    public PathChain Path1;
+    public PathChain Path1,Path2;
 
     public final Pose startRedTop = new Pose(120.2,127, Math.toRadians(36));
 
@@ -19,5 +19,12 @@ public class RedClosePath {
                         new Pose(90,92)
                 )
         ).setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(50)).build();
+        Path2 = follower.pathBuilder().addPath(
+                new BezierLine(
+                        new Pose(90, 92),
+
+                        new Pose(96,130)
+                )
+        ).setLinearHeadingInterpolation(Math.toRadians(50), Math.toRadians(90)).build();
     }
 }

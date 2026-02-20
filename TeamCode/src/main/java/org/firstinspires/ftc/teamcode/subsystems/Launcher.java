@@ -22,12 +22,16 @@ public class Launcher {
     private static final double FLYWHEEL_I = 3;
     private static final double FLYWHEEL_D = 3;
     private static final double FLYWHEEL_F = 1;
+    // Velocity & tolerance
+    // INCREASE THIS: 25 is often too tight. 100 allows for small fluctuations.
 
     // Tolerance
     private static final double VELOCITY_TOLERANCE = 75;
 
     // --- Timing ---
+    // How long to keep spinning/firing during a shot
     private static final long FIRE_TIME_MS = 6000;
+    // How long to spin the wheel to advance the second artifact
     private static final long FEED_TIME_MS = 3000;
 
     private final ElapsedTime timer = new ElapsedTime();
@@ -36,9 +40,9 @@ public class Launcher {
     private enum State {
         IDLE,
         SPINNING_UP,
-        FIRING_SINGLE,
-        FIRING_TWO_FRONT,
-        ADVANCING_SECOND
+        FIRING_SINGLE,      // One artifact: Wheel only
+        FIRING_TWO_FRONT,   // Two artifacts: Wheel only
+        ADVANCING_SECOND    // Moving second artifact to position
     }
 
     private State state = State.IDLE;
@@ -78,7 +82,6 @@ public class Launcher {
         flywheelRight.setVelocity(targetVelocity);
 
         launchRequested = false;
-        timer.reset(); // FIX: Reset timer so it tracks time since spin-up started
         state = State.SPINNING_UP;
     }
 
@@ -90,13 +93,16 @@ public class Launcher {
 
         currentTwoArtifacts = twoArtifacts;
         launchRequested = true;
-        targetVelocity = velocity;
 
-        flywheelLeft.setVelocity(targetVelocity);
-        flywheelRight.setVelocity(targetVelocity);
-
-        timer.reset(); // FIX: Reset timer so the 3-second timeout is accurate
-        state = State.SPINNING_UP;
+        if (state == State.IDLE) {
+            targetVelocity = velocity;
+            flywheelLeft.setVelocity(targetVelocity);
+            flywheelRight.setVelocity(targetVelocity);
+            state = State.SPINNING_UP;
+        } else {
+            // Already spinning, update target
+            targetVelocity = velocity;
+        }
     }
 
     /**
@@ -105,7 +111,9 @@ public class Launcher {
     public void advanceSecondArtifact() {
         if (state != State.IDLE) return;
 
+        // Start spinning the wheel immediately
         wheel.setPower(WHEEL_FEED_POWER);
+
         timer.reset();
         state = State.ADVANCING_SECOND;
     }
@@ -138,6 +146,7 @@ public class Launcher {
     public void update() {
         switch (state) {
             case IDLE:
+                // nothing to do
                 break;
 
             case SPINNING_UP: {
@@ -148,25 +157,30 @@ public class Launcher {
                 boolean leftOk  = Math.abs(leftVel  - targetVelocity) <= VELOCITY_TOLERANCE;
                 boolean rightOk = Math.abs(rightVel - targetVelocity) <= VELOCITY_TOLERANCE;
 
-                // Safety fallback: Fire if we've been waiting for > 3 seconds since launch() was called
+                // --- DEBUGGING HELP ---
+                // If the wheel isn't spinning, it's stuck waiting here.
+                // You can verify this by looking at telemetry in your OpMode.
+
+                // CONDITION: Fire if speeds are good OR if we've been trying for > 3 seconds (safety fallback)
+                // (Using a safety fallback prevents the auto from freezing if the battery is low)
                 boolean timeOut = (timer.seconds() > 3.0 && launchRequested);
 
                 if ((leftOk && rightOk) || timeOut) {
 
                     if (!launchRequested) {
-                        // We are just pre-spinning. Keep resetting the timer to prevent
-                        // an instant timeout if launch() is called later.
-                        timer.reset();
+                        // We are just pre-spinning. Keep flywheels on, stay in this state.
                         break;
                     }
 
                     // --- START THE SHOT ---
-                    timer.reset();
+                    timer.reset(); // Reset timer to track the firing duration
 
                     if (currentTwoArtifacts) {
+                        // Two Artifacts: Wheel ON
                         wheel.setPower(WHEEL_FEED_POWER);
                         state = State.FIRING_TWO_FRONT;
                     } else {
+                        // Single Artifact: Wheel ON
                         wheel.setPower(WHEEL_FEED_POWER);
                         state = State.FIRING_SINGLE;
                     }
@@ -174,8 +188,21 @@ public class Launcher {
                 break;
             }
 
-            case FIRING_SINGLE:
-            case FIRING_TWO_FRONT: { // Merged these two cases since the logic was identical
+            case FIRING_SINGLE: {
+                // Wait for the shot to complete
+                if (timer.milliseconds() >= FIRE_TIME_MS) {
+                    wheel.setPower(0);
+                    flywheelLeft.setVelocity(0);
+                    flywheelRight.setVelocity(0);
+
+                    launchRequested = false;
+                    currentTwoArtifacts = false;
+                    state = State.IDLE;
+                }
+                break;
+            }
+
+            case FIRING_TWO_FRONT: {
                 if (timer.milliseconds() >= FIRE_TIME_MS) {
                     wheel.setPower(0);
                     flywheelLeft.setVelocity(0);

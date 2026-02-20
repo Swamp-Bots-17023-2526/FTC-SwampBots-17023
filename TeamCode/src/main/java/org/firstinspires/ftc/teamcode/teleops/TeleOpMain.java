@@ -18,12 +18,14 @@ public class TeleOpMain extends LinearOpMode {
 
     // --- State Variables ---
     private boolean isRedAlliance = true;
+    private boolean isManualWheelForward = false; // NEW: Tracks wheel toggle state
 
     // --- Manual RPM Variable ---
-    private double manualTargetRpm = 1700.0;
+    private double manualTargetRpm = 1400;
 
     // --- Toggle Memory ---
     private boolean lastRightBumper = false;
+    private boolean lastLeftBumper = false; // NEW: Left bumper edge detection
     private boolean lastDpadUp = false;
     private boolean lastDpadDown = false;
     private boolean lastButtonX = false;
@@ -87,7 +89,6 @@ public class TeleOpMain extends LinearOpMode {
             lastBackButton = gamepad1.back;
 
             // Drive Command
-            // We pass 'false' to update() because there is no auto-path to cancel anymore
             drive.driveFieldCentric(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             drive.update(false);
 
@@ -97,13 +98,11 @@ public class TeleOpMain extends LinearOpMode {
             // Button X: Toggle Intake AND Manual Feeder Wheel
             if (gamepad1.x && !lastButtonX) {
                 if (intake.getState() == Intake.State.INTAKING) {
-                    // Turn OFF Intake & Wheel
+                    // Turn OFF Intake
                     intake.stop();
-                    launcher.manualWheelOff();
                 } else {
-                    // Turn ON Intake & Wheel
+                    // Turn ON Intake
                     intake.intakeIn();
-                    launcher.manualWheelForward();
                 }
             }
             lastButtonX = gamepad1.x;
@@ -132,15 +131,17 @@ public class TeleOpMain extends LinearOpMode {
                 launcher.launch(manualTargetRpm, true);
             }
 
-            // Left Bumper: Advance Second Artifact
-            if (gamepad1.left_bumper) {
-                launcher.advanceSecondArtifact();
+            // Left Bumper: Toggle Manual Wheel Forward (Replaces advanceSecondArtifact)
+            if (gamepad1.left_bumper && !lastLeftBumper) {
+                isManualWheelForward = !isManualWheelForward;
             }
+            lastLeftBumper = gamepad1.left_bumper;
 
             // Button B: STOP ALL (Safety)
             if (gamepad1.b) {
                 launcher.stopAll();
                 intake.stop();
+                isManualWheelForward = false; // Reset the toggle so it doesn't stay on
             }
 
 
@@ -157,15 +158,16 @@ public class TeleOpMain extends LinearOpMode {
             }
             lastDpadDown = gamepad1.dpad_down;
 
-            // D-Pad LEFT/RIGHT: Manual Launcher Unjam
-            if (gamepad1.dpad_left) {
-                launcher.manualWheelForward();
-            } else if (gamepad1.dpad_right) {
+            // D-Pad RIGHT: Manual Launcher Unjam (Reverse)
+            // (D-Pad Left removed since left_bumper now handles forward)
+            if (gamepad1.dpad_right) {
                 launcher.manualWheelBack();
+            } else if (isManualWheelForward) {
+                launcher.manualWheelForward(); // Feed wheel forward if toggle is ON
             } else {
                 // Only stop the wheel if:
-                // 1. We aren't intaking (because intake keeps it running now)
-                // 2. We aren't firing/advancing (launcher logic)
+                // 1. We aren't intaking
+                // 2. We aren't firing/advancing
                 String lState = launcher.getStateName();
                 if (intake.getState() != Intake.State.INTAKING &&
                         !lState.contains("FIRING") &&
@@ -181,6 +183,7 @@ public class TeleOpMain extends LinearOpMode {
             // --- 5. TELEMETRY ---
             telemetry.addData("TARGET RPM", "%.0f", manualTargetRpm);
             telemetry.addData("Intake", intake.getState());
+            telemetry.addData("Wheel Forward Toggle", isManualWheelForward ? "ON" : "OFF");
             telemetry.addData("Launcher L/R", "%.0f / %.0f", launcher.getLeftVelocity(), launcher.getRightVelocity());
             telemetry.update();
         }

@@ -30,7 +30,7 @@ public class BlueCloseAuto extends OpMode {
             case 0:
                 // --- ACTION: Start Path 1 ---
                 follower.followPath(paths.Path1);
-                pew.preSpin(1400);
+                pew.preSpin(1600);
                 setPathState(1);
                 break;
 
@@ -38,7 +38,7 @@ public class BlueCloseAuto extends OpMode {
                 // --- ACTION: Wait for Arrival, Then Fire ---
                 if(!follower.isBusy()) {
                     // Trigger the shot
-                    pew.launch(1400, true);
+                    pew.launch(1600, true);
 
                     // Move to "Wait for Shot" state
                     setPathState(2);
@@ -48,7 +48,23 @@ public class BlueCloseAuto extends OpMode {
             case 2:
                 // --- ACTION: Wait for Shot to Finish ---
                 if(!pew.isBusy()) {
-                    // Shot is done, launcher is IDLE
+                    // The shot is finished (Launcher returned to IDLE).
+                    // Move on to the next path.
+                    setPathState(3); // FIXED: Was -1, now goes to 3
+                }
+                break;
+
+            case 3:
+                // --- ACTION: Start Path 2 ---
+                // We know the robot isn't moving because it stopped to shoot.
+                follower.followPath(paths.Path2);
+                setPathState(4); // FIXED: Advance state so we don't spam followPath()
+                break;
+
+            case 4:
+                // --- ACTION: Wait for Path 2 to finish ---
+                if(!follower.isBusy()) {
+                    // Path 2 is done. We can now idle or add more states.
                     setPathState(-1);
                 }
                 break;

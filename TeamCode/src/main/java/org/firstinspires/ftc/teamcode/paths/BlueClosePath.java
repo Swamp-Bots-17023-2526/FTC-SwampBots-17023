@@ -6,7 +6,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
 public class BlueClosePath {
-    public PathChain Path1;
+    public PathChain Path1, Path2;
 
     // Mirrored Start Pose:
     // X = 144 - 120.2 = 23.8
@@ -25,6 +25,18 @@ public class BlueClosePath {
                 )
                 // Mirrored Heading Interpolation: 180 - 36 = 144, 180 - 50 = 130
                 .setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(130))
+                .build();
+
+        Path2 = follower.pathBuilder().addPath(
+                        new BezierLine(
+                                new Pose(54, 92),
+
+                                // Mirrored End Pose: X = 144 - 90 = 54
+                                new Pose(48, 130)
+                        )
+                )
+                // Mirrored Heading Interpolation: 180 - 36 = 144, 180 - 50 = 130
+                .setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(90))
                 .build();
     }
 }
